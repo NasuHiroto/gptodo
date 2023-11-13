@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'https://api.openai.com/v1/';
 const MODEL = 'gpt-3.5-turbo';
-const API_KEY = '';
+const API_KEY = 'あなたのchatGPTのAPIキーを入れてください';
 
 export const chat = async (message, maxTokens = 100) => {
   try {
