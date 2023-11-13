@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\ToDoDetail\StoreRequest;
+use App\Http\Requests\ToDoDetail\UpdateRequest;
+use App\Models\ToDoDetail;
+use Illuminate\Http\Request;
+
+class ToDoDetailController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreRequest $request)
+    {
+        //新規のToDoDetailモデルを作成する
+        $toDoDetail = new ToDoDetail();
+
+        //ToDoDetailに値を設定する
+        $toDoDetail->to_do_id = $request->get('to_do_id');
+        $toDoDetail->name = $request->get('name');
+        $toDoDetail->completed_flag = false;
+
+        //DBにデータを登録する
+        $toDoDetail->save();
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateRequest $request, string $id)
+    {
+        //IDに紐づくToDoDetailモデルを取得する
+        $toDoDetail = ToDoDetail::find($id);
+
+        //ToDoDetailモデルに設定する
+        $toDoDetail->name = $request->get('name');
+        $toDoDetail->completed_flag = $request->get('completed_flag');
+
+        //ToDoDetailテーブルを更新する
+        $toDoDetail->save();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //IDに紐づくToDoDetailモデルを取得する
+        $toDoDetail = ToDoDetail::find($id);
+
+        //ToDoDetailテーブルから対象のレコードを削除する
+        $toDoDetail->delete();
+    }
+}
