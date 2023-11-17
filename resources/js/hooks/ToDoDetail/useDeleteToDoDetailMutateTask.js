@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 const useDeleteToDoDetailMutateTask = () => {
     const queryClient = useQueryClient();
     const deleteToDoDetailMutation = useMutation(
-        (toDoDetail) => axios.delete("/api/tododetails/" + toDoDetail.id),
+        async (toDoDetail) => axios.delete("/api/tododetails/" + toDoDetail.id),
         {
             onMutate: async (toDoDetail) => {
                 // 実行中の取得処理をキャンセル
@@ -16,18 +16,19 @@ const useDeleteToDoDetailMutateTask = () => {
                 // ToDoリストのキャッシュを更新する
                 queryClient.setQueryData("toDoList", (oldToDoList) =>
                     oldToDoList.map((oldToDo) => {
-                        if (oldToDo.id == toDoDetail.to_do_id) {
-                            let newToDoDetails = [];
-                            oldToDo.to_do_details.map((oldToDoDetail) => {
-                                if (oldToDoDetail.id != toDoDetail.id) {
-                                    newToDoDetails.push(oldToDoDetail);
-                                }
-                            });
-                            oldToDo.to_do_details = newToDoDetails;
-                            return oldToDo;
+                        if (oldToDo.id === toDoDetail.to_do_id) {
+                            const newToDoDetails = oldToDo.to_do_details.filter((oldToDoDetail) =>
+                                oldToDoDetail.id !== toDoDetail.id
+                            );
+                            return {
+                                ...oldToDo,
+                                to_do_details: newToDoDetails,
+                            };
                         }
+                        return oldToDo;
                     })
                 );
+
                 // 削除に失敗した場合、既存のToDoリストを返却する
                 return { previousToDoList };
             },
@@ -36,6 +37,7 @@ const useDeleteToDoDetailMutateTask = () => {
             },
         }
     );
+
     return { deleteToDoDetailMutation };
 };
 
